@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For Eman</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito:wght@400;600&display=swap">
+<style>
+:root{--bg:#f4effb;--ink:#34254f;--muted:#6a5a86;--card:#ffffff;--accent:#a8557f;--star:#e08fb4;--line:#d9cdee;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1534;--ink:#f1eafc;--muted:#bfb0dc;--card:#2a1f48;--accent:#f0b4cf;--star:#f6d3e3;--line:#41336a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d1534;--ink:#f1eafc;--muted:#bfb0dc;--card:#2a1f48;--accent:#f0b4cf;--star:#f6d3e3;--line:#41336a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;line-height:1.65;min-height:100vh}
+h1,h2,.wish{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-height:1.15;margin:0}
+#lock{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+#lock h1{font-size:clamp(2rem,7vw,3rem)}
+#lock p{margin:0;color:var(--muted);max-width:32ch}
+.row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+input{font:inherit;padding:12px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);width:230px;text-align:center}
+button{font:inherit;cursor:pointer}
+.go{padding:12px 24px;border-radius:999px;border:0;background:var(--accent);color:var(--bg);font-weight:600}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+#err{min-height:1.4em;color:var(--accent);font-size:.95rem}
+.shake{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+main{max-width:640px;margin:0 auto;padding:56px 22px 72px}
+main h1{font-size:clamp(2.4rem,9vw,4rem);letter-spacing:-.01em}
+.lead{font-size:1.1rem;color:var(--muted);margin:18px 0 0;max-width:52ch}
+h2{font-size:1.7rem;margin-top:56px}
+.sky{position:relative;height:260px;margin-top:18px;border:1px solid var(--line);border-radius:20px;background:var(--card);overflow:hidden}
+.star{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border:0;background:none;color:var(--star);font-size:26px;line-height:1;transition:transform .2s,color .2s;opacity:.55}
+.star:hover{transform:scale(1.2)}
+.star.on{opacity:1;color:var(--accent)}
+.star.cur{transform:scale(1.35);opacity:1}
+.card{margin-top:16px;padding:22px;border-left:3px solid var(--accent);background:var(--card);border-radius:0 14px 14px 0;min-height:96px}
+.wish{font-size:1.55rem;font-style:italic;font-weight:500}
+.count{color:var(--muted);font-size:.9rem;margin-top:10px}
+.close{margin-top:56px;padding-top:28px;border-top:1px solid var(--line)}
+.close p{margin:0 0 12px}
+.sign{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.5rem;font-style:italic;color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<section id="lock">
+  <h1>A little something for Eman</h1>
+  <p>Please enter the password to open it.</p>
+  <div class="row">
+    <input id="pw" type="password" placeholder="Password" autocomplete="off" aria-label="Password">
+    <button class="go" id="open">Open</button>
+  </div>
+  <div id="err" role="alert"></div>
+</section>
+
+<main id="page" hidden>
+  <h1>Eman, I’m glad we’re friends.</h1>
+  <p class="lead">Some people just make a room feel calmer. You’re one of them: kind eyes, a gentle voice, and a heart that’s honest and sweet. Thank you for being such a good person to know. This page is a small promise to be a good friend back.</p>
+
+  <h2>Seven wishes for you</h2>
+  <p class="lead" style="margin-top:8px">Tap a star to open a wish.</p>
+  <div class="sky" id="sky"></div>
+  <div class="card" aria-live="polite">
+    <div class="wish" id="wish">Your first wish is waiting.</div>
+    <div class="count" id="count">0 of 7 stars opened</div>
+  </div>
+
+  <div class="close">
+    <p>Here’s to honest talks, easy laughter, and a friendship built on respect and kindness. Happy friendship, Eman.</p>
+    <div class="sign">Your friend</div>
+  </div>
+</main>
+
+<script>
+var HASH="5bc5eaa34dccc02610a06ae84d4e9765613a814a53f621f4cf1e1ffc5a904dc4";
+var wishes=[
+"May your days be as gentle as your voice.",
+"May the people around you be as kind to you as you are to them.",
+"May your kind eyes always find good things to look at.",
+"May this year bring you calm, growth, and quiet wins.",
+"May you stay as sweet and genuine as you are today.",
+"May our friendship always stay honest, respectful, and full of laughter.",
+"May every dream you carry find its way to you."
+];
+var pos=[[12,30],[27,72],[40,24],[54,62],[67,28],[80,70],[90,34]];
+async function sha(s){var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}
+async function tryOpen(){
+  var v=document.getElementById("pw").value.trim().toLowerCase();
+  var ok=false;
+  try{ok=(await sha(v))===HASH}catch(e){ok=false}
+  if(ok){document.getElementById("lock").hidden=true;document.getElementById("page").hidden=false;window.scrollTo(0,0)}
+  else{var e=document.getElementById("err");e.textContent="That password isn’t right. Please try again.";var i=document.getElementById("pw");i.classList.remove("shake");void i.offsetWidth;i.classList.add("shake")}
+}
+document.getElementById("open").addEventListener("click",tryOpen);
+document.getElementById("pw").addEventListener("keydown",function(e){if(e.key==="Enter")tryOpen()});
+var sky=document.getElementById("sky"),opened={},btns=[];
+pos.forEach(function(p,i){
+  var b=document.createElement("button");
+  b.className="star";b.textContent="\u2605";b.setAttribute("aria-label","Open wish "+(i+1));
+  b.style.left=p[0]+"%";b.style.top=p[1]+"%";
+  b.addEventListener("click",function(){
+    opened[i]=true;b.classList.add("on");
+    btns.forEach(function(x){x.classList.remove("cur")});b.classList.add("cur");
+    document.getElementById("wish").textContent=wishes[i];
+    var n=Object.keys(opened).length;
+    document.getElementById("count").textContent=n===7?"All 7 stars opened. Every one of them is meant.":n+" of 7 stars opened";
+  });
+  sky.appendChild(b);btns.push(b);
+});
+</script>
+</body>
+</html>
